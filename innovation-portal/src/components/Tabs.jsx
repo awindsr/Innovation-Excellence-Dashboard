@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import Overview from './Overview';
+import Projects from './Projects';
+import Publications from './Publications';
+import Patents from './Patents';
+import Grants from './Grants';
 
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState('overview'); // Default active tab
@@ -45,10 +49,10 @@ const Tabs = () => {
       
       <div className='mt-4'>
       {activeTab === 'overview' && <Overview/>}
-        {activeTab === 'projects' && <div>Content for Projects</div>}
-        {activeTab === 'publications' && <div>Content for Publications</div>}
-        {activeTab === 'patents' && <div>Content for Patents</div>}
-        {activeTab === 'grants' && <div>Content for grants</div>}
+        {activeTab === 'projects' && <Projects/>}
+        {activeTab === 'publications' && <Publications/>}
+        {activeTab === 'patents' && <Patents/>}
+        {activeTab === 'grants' && <Grants/>}
       </div>
     </div>
   );
