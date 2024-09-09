@@ -1,20 +1,19 @@
 import React from 'react'
 
-export default function Card() {
-
+export default function Card({ title, value, change }) {
   return (
-    <div className='font-poppins p-4 text-black bg-white border border-gray-300 rounded-lg  h-[10rem] flex flex-col items-start justify-between w-1/4'>
-        <h2 className='font-medium text-left'>
-           Total Projects
-        </h2>
-        <div>
-            <p className='text-4xl font-medium '>
-                65
-            </p>
-            <p className='text-gray-500'>
-                +10% from last month
-            </p>
-        </div>
+    <div className='font-poppins p-4 text-black bg-white border border-gray-300 rounded-lg flex flex-col items-start justify-between w-full md:w-1/4 h-[10rem] mb-4 sm:mb-0'>
+      <h2 className='font-medium text-left text-sm sm:text-base'>
+        {title}
+      </h2>
+      <div>
+        <p className='text-2xl sm:text-3xl lg:text-4xl font-medium'>
+          {value}
+        </p>
+        <p className='text-gray-500 text-xs sm:text-sm'>
+          {change}
+        </p>
+      </div>
     </div>
   )
 }
