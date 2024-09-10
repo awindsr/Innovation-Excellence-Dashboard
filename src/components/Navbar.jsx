@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseclient';
 import { clearUser } from '../features/user/userSlice';
-\
 
 export default function Navbar() {
   const dispatch = useDispatch();
@@ -32,9 +31,7 @@ export default function Navbar() {
                   >
                     Logout
                   </button>
-                  <button>
-                    //add user profile button here
-                  </button>
+                 
                   {role === 'student' && (
                     <button 
                       onClick={() => navigate('/add-project')}
