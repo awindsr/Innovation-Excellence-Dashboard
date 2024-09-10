@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useLogin } from '../hooks/useLogin';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { supabase } from '../utils/supabaseclient';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, loading, error } = useLogin();
+  const { login, signup, loading, error } = useLogin();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,22 +19,22 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let success;
     if (isLogin) {
-      const success = await login(email, password);
-      if (success) {
-        // Send them back to the page they tried to visit when they were
-        // redirected to the login page. Use { replace: true } so we don't create
-        // another entry in the history stack for the login page.  This means that
-        // when they get to the protected page and click the back button, they
-        // won't end up back on the login page, which is also really nice for the
-        // user experience.
-        const from = location.state?.from?.pathname || "/";
-        navigate(from, { replace: true });
-      }
+      success = await login(email, password);
     } else {
-      // Handle signup logic here
-      console.log('Signup with:', { email, password, name, department, phoneNumber, birthDate, collegeYear, role });
-      // You'll need to implement the signup functionality
+      success = await signup(email, password, {
+        name,
+        department,
+        phone_number: phoneNumber,
+        birth_date: birthDate,
+        college_year: parseInt(collegeYear),
+        role
+      });
+    }
+    if (success) {
+      const from = location.state?.from?.pathname || "/";
+      navigate(from, { replace: true });
     }
   };
 

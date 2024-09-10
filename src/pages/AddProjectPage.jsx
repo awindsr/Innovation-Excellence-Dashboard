@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../utils/supabaseclient";
+import { useSelector } from "react-redux";
 
 const AddProject = () => {
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user);
   const [projectType, setProjectType] = useState("projects");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [department, setDepartment] = useState("");
+  const [status, setStatus] = useState("");
   const [date, setDate] = useState("");
   const [isTeamWork, setIsTeamWork] = useState(false);
   const [teamMembers, setTeamMembers] = useState([]);
+  const [tags, setTags] = useState([]);
 
   // Additional fields for specific project types
   const [fundingSource, setFundingSource] = useState("");
@@ -23,39 +28,100 @@ const AddProject = () => {
   const [competitionName, setCompetitionName] = useState("");
   const [rankPosition, setRankPosition] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted:", {
-      projectType,
+
+    const commonData = {
       title,
       description,
       department,
       date,
-      isTeamWork,
-      teamMembers,
-      ...getAdditionalFields(),
-    });
-    // After submission, navigate back to the dashboard or project list
-    navigate("/");
-  };
+      is_team_work: isTeamWork,
+      team_members: isTeamWork ? teamMembers : null,
+      done_by: user.id,
+    };
 
-  const getAdditionalFields = () => {
+    let tableData = {};
+    let tableName = "";
+
     switch (projectType) {
       case "projects":
-        return { fundingSource, duration };
+        tableData = {
+          ...commonData,
+          funding_source: fundingSource,
+          duration,
+          status, // You might want to adjust this based on your workflow
+        };
+        tableName = "projects";
+        break;
       case "publications":
-        return { journalConference, doi };
+        tableData = {
+          ...commonData,
+          journal: journalConference,
+          doi,
+          type: "Journal", // You might want to make this selectable in the form
+          authors: isTeamWork
+            ? teamMembers.map((member) => member.name)
+            : [user.name],
+        };
+        tableName = "publications";
+        break;
       case "patents":
-        return { patentNumber, filingDate };
+        tableData = {
+          ...commonData,
+          patent_number: patentNumber,
+          filing_date: filingDate,
+          status, // You might want to adjust this based on your workflow
+          inventors: isTeamWork
+            ? teamMembers.map((member) => member.name)
+            : [user.name],
+        };
+        tableName = "patents";
+        break;
       case "grants":
-        return { grantingAgency, amount };
+        tableData = {
+          ...commonData,
+          granting_agency: grantingAgency,
+          amount: parseFloat(amount),
+          start_date: date, // Assuming the date field is used as start_date for grants
+          status: "Active", // You might want to adjust this based on your workflow
+          principal_investigator: user.id,
+        };
+        tableName = "grants";
+        break;
       case "competitions":
-        return { competitionName, rankPosition };
+        tableData = {
+          ...commonData,
+          title: competitionName,
+          rank_achieved: rankPosition,
+          participants: isTeamWork
+            ? teamMembers.map((member) => member.name)
+            : [user.name],
+          status, // You might want to adjust this based on your workflow
+        };
+        tableName = "competitions";
+        break;
       default:
-        return {};
+        console.error("Invalid project type");
+        return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from(tableName)
+        .insert([tableData]);
+
+      if (error) throw error;
+
+      console.log("Data inserted successfully:", data);
+      navigate("/"); // Redirect to home page or project list
+    } catch (error) {
+      console.error("Error inserting data:", error);
+      // Handle error (e.g., show error message to user)
     }
   };
+
+  
 
   const addTeamMember = () => {
     setTeamMembers([
@@ -129,6 +195,36 @@ const AddProject = () => {
             required
           />
         </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Tags
+          </label>
+          <input
+            type="text"
+            value={tags.join(", ")}
+            onChange={(e) =>
+              setTags(e.target.value.split(",").map((tag) => tag.trim()))
+            }
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Status
+          </label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            required>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="Pending Approval">Pending Approval</option>
+          </select>
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Date

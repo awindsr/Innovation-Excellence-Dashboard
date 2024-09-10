@@ -6,6 +6,8 @@ import userReducer from './features/user/userSlice';
 import Dashboard from './components/Dashboard';
 import LoginPage from './pages/LoginPage';
 import AddProject from './pages/AddProjectPage';
+import ProfilePage from './pages/ProfilePage';
+
 
 const store = configureStore({
   reducer: {
@@ -21,6 +23,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/add-project" element={<AddProject />} />
+          <Route path='/profile' element={<ProfilePage/>}/>
         </Routes>
       </Router>
     </Provider>

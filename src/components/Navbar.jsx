@@ -1,19 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseclient';
 import { clearUser } from '../features/user/userSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
 
 export default function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoggedIn, role } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.user);
+  const isLoggedIn = !!user;
+  const [role, setRole] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const getUserRole = async () => {
+      try {
+        if (user?.id) {
+          const { data, error } = await supabase
+            .from('users')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+        
+          if (error) {
+            console.error('Error fetching role:', error);
+            return;
+          }
+
+          if (data) {
+            console.log('Role fetched:', data.role);
+            setRole(data.role);
+          }
+        }
+      } catch (error) {
+        console.error('Unexpected error:', error);
+      }
+    };
+
+    if (user?.id) {
+      getUserRole();
+    }
+  }, [user]);
+
+  function handleProfileClick(){
+    navigate('/profile')
+  }
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     dispatch(clearUser());
     setIsMenuOpen(false);
+    navigate('/');
   };
 
   return (
@@ -40,6 +79,27 @@ export default function Navbar() {
                       Add Project
                     </button>
                   )}
+                  {role === 'faculty' && (
+                    <button 
+                      onClick={() => navigate('/review-requests')}
+                      className='bg-blue-500 text-white px-3 py-2 rounded-lg text-sm'
+                    >
+                      Review Requests
+                    </button>
+                  )}
+                  {role === 'admin' && (
+                    <button 
+                      onClick={() => navigate('/admin-dashboard')}
+                      className='bg-blue-500 text-white px-3 py-2 rounded-lg text-sm'
+                    >
+                      Admin Dashboard
+                    </button>
+                  )}
+                  <button 
+                  onClick={handleProfileClick}
+                  >
+                    <FontAwesomeIcon icon={faUser} className='text-white bg-black p-3 rounded-full'/>
+                  </button>
                 </>
               ) : (
                 <button
@@ -80,6 +140,28 @@ export default function Navbar() {
                     className='block w-full text-left bg-blue-500 text-white px-3 py-2 rounded-lg text-base'
                   >
                     Add Project
+                  </button>
+                )}
+                {role === 'faculty' && (
+                  <button 
+                    onClick={() => {
+                      navigate('/review-requests');
+                      setIsMenuOpen(false);
+                    }}
+                    className='block w-full text-left bg-blue-500 text-white px-3 py-2 rounded-lg text-base'
+                  >
+                    Review Requests
+                  </button>
+                )}
+                {role === 'admin' && (
+                  <button 
+                    onClick={() => {
+                      navigate('/admin-dashboard');
+                      setIsMenuOpen(false);
+                    }}
+                    className='block w-full text-left bg-blue-500 text-white px-3 py-2 rounded-lg text-base'
+                  >
+                    Admin Dashboard
                   </button>
                 )}
               </>
