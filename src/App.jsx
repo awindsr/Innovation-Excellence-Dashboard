@@ -23,7 +23,8 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/add-project" element={<AddProject />} />
-          <Route path='/profile' element={<ProfilePage/>}/>
+          {/* <Route path='/profile' element={<ProfilePage/>}/> */}
+          <Route path="/profile/:id?" element={<ProfilePage />} />
         </Routes>
       </Router>
     </Provider>

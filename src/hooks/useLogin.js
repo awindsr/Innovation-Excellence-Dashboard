@@ -39,7 +39,7 @@ export const useLogin = () => {
         role: userData.role || "student", // This is correct
       };
 
-      console.log(userDetails.role)
+      
       dispatch(setUser(userDetails));
       return true;
     } catch (error) {

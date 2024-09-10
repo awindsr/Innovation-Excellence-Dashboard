@@ -13,6 +13,7 @@ export default function Navbar() {
   const isLoggedIn = !!user;
   const [role, setRole] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const id = user?.id;
 
   useEffect(() => {
     const getUserRole = async () => {
@@ -45,7 +46,7 @@ export default function Navbar() {
   }, [user]);
 
   function handleProfileClick(){
-    navigate('/profile')
+    navigate(`/profile/${id}`)
   }
 
   const handleLogout = async () => {
