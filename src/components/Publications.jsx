@@ -15,7 +15,7 @@ export default function Publications() {
         const { data, error } = await supabase
           .from('publications')
           .select('*')
-          .order('publication_date', { ascending: false });
+          .order('date', { ascending: false });
 
         if (error) throw error;
 

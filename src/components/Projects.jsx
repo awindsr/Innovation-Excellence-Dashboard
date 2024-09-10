@@ -37,7 +37,7 @@ export default function Projects() {
 
     fetchProjects();
   }, []);
-
+  
   if (loading) return <div>Loading projects...</div>;
   if (error) return <div>{error}</div>;
 

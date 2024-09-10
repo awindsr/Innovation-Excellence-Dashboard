@@ -16,6 +16,7 @@ const LoginPage = () => {
   const [birthDate, setBirthDate] = useState('');
   const [collegeYear, setCollegeYear] = useState('');
   const [role, setRole] = useState('student');
+  const [designation, setDesignation] = useState("")
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -124,20 +125,7 @@ const LoginPage = () => {
                     onChange={(e) => setBirthDate(e.target.value)}
                   />
                 </div>
-                <div>
-                  <input
-                    id="collegeYear"
-                    name="collegeYear"
-                    type="number"
-                    required
-                    min="1"
-                    max="5"
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                    placeholder="Current College Year"
-                    value={collegeYear}
-                    onChange={(e) => setCollegeYear(e.target.value)}
-                  />
-                </div>
+                
                 <div>
                   <label htmlFor="role" className="sr-only">Role</label>
                   <select
@@ -152,6 +140,35 @@ const LoginPage = () => {
                     <option value="faculty">Faculty</option>
                   </select>
                 </div>
+                {role == 'student'? (<div>
+                  <input
+                    id="collegeYear"
+                    name="collegeYear"
+                    type="number"
+                    required
+                    min="1"
+                    max="5"
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    placeholder="Current College Year"
+                    value={collegeYear}
+                    onChange={(e) => setCollegeYear(e.target.value)}
+                  />
+                </div>) : 
+                  (<div>
+                    <input
+                      id="designation"
+                      name="designation"
+                      type="text"
+                      required
+                      
+                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      placeholder="Your Designation"
+                      value={designation}
+                      onChange={(e) => setDesignation(e.target.value)}
+                    />
+                  </div>)
+                }
+                
               </>
             )}
           </div>

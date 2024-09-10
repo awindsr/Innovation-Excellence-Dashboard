@@ -15,7 +15,7 @@ export default function Grants() {
         const { data, error } = await supabase
           .from('grants')
           .select('*')
-          .order('start_date', { ascending: false });
+          .order('date', { ascending: false });
 
         if (error) throw error;
 

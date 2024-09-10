@@ -15,7 +15,7 @@ export default function Patents() {
         const { data, error } = await supabase
           .from('patents')
           .select('*')
-          .order('filing_date', { ascending: false });
+          .order('date', { ascending: false });
 
         if (error) throw error;
 

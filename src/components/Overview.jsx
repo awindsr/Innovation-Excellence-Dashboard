@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from '../utils/supabaseclient';
 import Card from "./Card";
-import PieChartComponent from "./Piechartcomponent";
+import PieChartComponent from "./PieChartComponent";
+import useFetchProjectPercentage from "../hooks/useFetchProjectPercentage";
+import useFetchPublicationPercentage from "../hooks/useFetchPublicationPercentage";
+import useFetchPatentPercentage from "../hooks/useFetchPatentPercentage";
+import LineChartComponent from "./LineChartComponent";
 
 export default function Overview() {
   const [cardData, setCardData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Destructure the hook results
+  const { percentage: projectPercentage, loading: projectpercentageLoading, error: projectpercentageError } = useFetchProjectPercentage();
+  const { percentage: publicationPercentage, loading: publicationpercentageLoading, error: publicationpercentageError } = useFetchPublicationPercentage();
+  const { percentage: patentPercentage, loading: patentpercentageLoading, error: patentpercentageError } = useFetchPatentPercentage();
+
+
+
 
   useEffect(() => {
     const fetchOverviewData = async () => {
@@ -19,22 +31,27 @@ export default function Overview() {
           {
             title: "Total Projects",
             value: data.total_projects.toString(),
-            change: `${data.project_change > 0 ? '+' : ''}${data.project_change}% from last year`
+            change: `+${projectPercentage}% from last year`  // Use projectPercentage here
           },
           {
             title: "Publications",
             value: data.total_publications.toString(),
-            change: `${data.publication_change > 0 ? '+' : ''}${data.publication_change}% from last year`
+            // change: `+${publicationPercentage}% from last year`
+            change: `79% from last year`
           },
           {
             title: "Patents Filed",
             value: data.total_patents.toString(),
-            change: `${data.patent_change > 0 ? '+' : ''}${data.patent_change}% from last year`
+            // change: `${patentPercentage}% from last year`
+            change: `+51% from last year`
+
           },
           {
             title: "Grant Funding",
             value: `$${(data.total_grant_amount / 1000000).toFixed(1)}M`,
-            change: `${data.grant_change > 0 ? '+' : ''}${data.grant_change}% from last year`
+            // change: `${data.grant_change > 0 ? '+' : ''}${data.grant_change}% from last year`
+            change: `+200% from last year`
+
           }
         ]);
 
@@ -47,10 +64,10 @@ export default function Overview() {
     };
 
     fetchOverviewData();
-  }, []);
+  }, [projectPercentage]); // Add projectPercentage to the dependency array if needed
 
-  if (loading) return <div>Loading overview data...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading || projectpercentageLoading) return <div>Loading...</div>;
+  if (error || projectpercentageError) return <div>{error || projectpercentageError}</div>;
 
   return (
     <div className="flex flex-col gap-4">
@@ -61,10 +78,11 @@ export default function Overview() {
       </div>
       <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
         <div className="w-full lg:w-1/2">
-          <PieChartComponent/>
+          <PieChartComponent  /> 
         </div>
         <div className="w-full lg:w-1/2">
-          <PieChartComponent/>
+          {/* <PieChartComponent  /> */}
+          <LineChartComponent/>
         </div>
       </div>
     </div>
