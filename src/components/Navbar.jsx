@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseclient';
 import { clearUser } from '../features/user/userSlice';
+\
 
 export default function Navbar() {
   const dispatch = useDispatch();
@@ -30,6 +31,9 @@ export default function Navbar() {
                     className='bg-black text-white px-3 py-2 rounded-lg text-sm'
                   >
                     Logout
+                  </button>
+                  <button>
+                    //add user profile button here
                   </button>
                   {role === 'student' && (
                     <button 
