@@ -17,6 +17,7 @@ const AddProject = () => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [tags, setTags] = useState([]);
   const [link, setLink] = useState("");
+ 
 
   // Additional fields for specific project types
   const [fundingSource, setFundingSource] = useState("");
@@ -85,15 +86,15 @@ const AddProject = () => {
           ...commonData,
           granting_agency: grantingAgency,
           amount: parseFloat(amount),
-          start_date: date, // Assuming the date field is used as start_date for grants
+          date: date, // Assuming the date field is used as start_date for grants
           status: "Active", // You might want to adjust this based on your workflow
-          principal_investigator: user.id,
+         done_by: user.id,
         };
         tableName = "grants";
         break;
       case "competitions":
         tableData = {
-          ...commonData,
+          ...commonData, 
           title: competitionName,
           rank_achieved: rankPosition,
           participants: isTeamWork

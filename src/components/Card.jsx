@@ -10,7 +10,7 @@ export default function Card({ title, value, change }) {
         <p className='text-2xl sm:text-3xl lg:text-4xl font-medium'>
           {value}
         </p>
-        <p className='text-gray-500 text-xs sm:text-sm'>
+        <p className='text-green-700 text-xs sm:text-sm'>
           {change}
         </p>
       </div>

@@ -2,8 +2,8 @@ import React from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const pieChartData = [
-  { name: "Engineering", value: 400 },
-  { name: "Sciences", value: 300 },
+  { name: "Computer Science", value: 400 },
+  { name: "Robotics", value: 300 },
   { name: "Business", value: 200 },
   { name: "Arts", value: 100 },
 ];

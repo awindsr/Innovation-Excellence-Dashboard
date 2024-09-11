@@ -49,6 +49,26 @@ export default function Navbar() {
     navigate(`/profile/${id}`);
   }
 
+  function handleRedirecttoStudentStatistics() {
+    if (role === "faculty") {
+      navigate("/student-statistics");
+    } else if (!user) {
+      navigate("/login");
+    } else {
+      navigate("/unauthorized");
+    }
+  }
+
+  function handleRedirecttoReview() {
+    if (role === "faculty") {
+      navigate("/review-requests");
+    } else if (!user) {
+      navigate("/login");
+    } else {
+      navigate("/unauthorized");
+    }
+  }
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     dispatch(clearUser());
@@ -67,28 +87,31 @@ export default function Navbar() {
             <div className="flex items-center gap-2">
               {isLoggedIn ? (
                 <>
-                  <button
-                    onClick={handleLogout}
-                    className="bg-black text-white px-3 py-2 rounded-lg text-sm">
-                    Logout
-                  </button>
+                  
 
                   {role === "student" && (
-                    <button
-                      onClick={() => navigate("/add-project")}
-                      className="bg-blue-500 text-white px-3 py-2 rounded-lg text-sm">
-                      Add Project
-                    </button>
+                    <div>
+                      <button
+                        onClick={() => navigate("/add-project")}
+                        className="bg-blue-500 text-white px-3 py-2 rounded-lg text-sm">
+                        Add
+                      </button>
+                      <button
+                        onClick={() => navigate("/mentor-connect")}
+                        className="bg-blue-500 text-white px-3 py-2 rounded-lg text-sm">
+                        Find Mentors
+                      </button>
+                    </div>
                   )}
                   {role === "faculty" && (
                     <div className="flex gap-2">
                       <button
-                        onClick={() => navigate("/review-requests")}
+                        onClick={handleRedirecttoReview}
                         className="bg-blue-500 text-white px-3 py-2 rounded-lg text-sm">
                         Review Requests
                       </button>
                       <button
-                        onClick={() => navigate("/review-requests")}
+                        onClick={handleRedirecttoStudentStatistics}
                         className="bg-blue-500 text-white px-3 py-2 rounded-lg text-sm">
                         Student Statistics
                       </button>
@@ -101,12 +124,18 @@ export default function Navbar() {
                       Admin Dashboard
                     </button>
                   )}
+                   <button
+                    onClick={handleLogout}
+                    className="bg-red-500 text-white px-3 py-2 rounded-lg text-sm">
+                    Logout
+                  </button>
                   <button onClick={handleProfileClick}>
                     <FontAwesomeIcon
                       icon={faUser}
                       className="text-white bg-black p-3 rounded-full"
                     />
                   </button>
+                 
                 </>
               ) : (
                 <button
@@ -158,14 +187,24 @@ export default function Navbar() {
                   </button>
                 )}
                 {role === "faculty" && (
-                  <button
-                    onClick={() => {
-                      navigate("/review-requests");
-                      setIsMenuOpen(false);
-                    }}
-                    className="block w-full text-left bg-blue-500 text-white px-3 py-2 rounded-lg text-base">
-                    Review Submissions
-                  </button>
+                  <>
+                    <button
+                      onClick={() => {
+                        navigate("/review-requests");
+                        setIsMenuOpen(false);
+                      }}
+                      className="block w-full text-left bg-blue-500 text-white px-3 py-2 rounded-lg text-base">
+                      Review Submissions
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleRedirecttoStudentStatistics();
+                        setIsMenuOpen(false);
+                      }}
+                      className="block w-full text-left bg-blue-500 text-white px-3 py-2 rounded-lg text-base">
+                      Student Statistics
+                    </button>
+                  </>
                 )}
                 {role === "admin" && (
                   <button

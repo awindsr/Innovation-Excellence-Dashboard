@@ -11,13 +11,49 @@ export default function Overview() {
   const [cardData, setCardData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [grantsData, setGrantsData] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(null);
 
   // Destructure the hook results
   const { percentage: projectPercentage, loading: projectpercentageLoading, error: projectpercentageError } = useFetchProjectPercentage();
   const { percentage: publicationPercentage, loading: publicationpercentageLoading, error: publicationpercentageError } = useFetchPublicationPercentage();
   const { percentage: patentPercentage, loading: patentpercentageLoading, error: patentpercentageError } = useFetchPatentPercentage();
 
+  useEffect(() => {
+    const fetchGrantsAndTotal = async () => {
+      try {
+        // Fetch grants data
+        const { data: grants, error: grantsError } = await supabase
+          .from('grants')
+          .select('*')
+          .order('date', { ascending: false });
 
+        if (grantsError) throw grantsError;
+
+        const transformedData = grants.map(grant => ({
+          ...grant,
+          tags: grant.tags ? grant.tags : [],
+        }));
+
+        setGrantsData(transformedData);
+
+        // Fetch total grant amount
+        const { data: totalData, error: totalError } = await supabase.rpc('get_total_grant_amount');
+
+        if (totalError) throw totalError;
+
+        setTotalAmount(totalData[0]?.total_amount || 0);
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching grants or total amount:', error);
+        setError('Failed to load grants or total amount. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchGrantsAndTotal();
+  }, []);
 
 
   useEffect(() => {
@@ -31,13 +67,13 @@ export default function Overview() {
           {
             title: "Total Projects",
             value: data.total_projects.toString(),
-            change: `+${projectPercentage}% from last year`  // Use projectPercentage here
+            change: `+${Math.round(projectPercentage)}% from last year`  // Use projectPercentage here
           },
           {
             title: "Publications",
             value: data.total_publications.toString(),
             // change: `+${publicationPercentage}% from last year`
-            change: `79% from last year`
+            change: `+79% from last year`
           },
           {
             title: "Patents Filed",
@@ -48,9 +84,11 @@ export default function Overview() {
           },
           {
             title: "Grant Funding",
-            value: `$${(data.total_grant_amount / 1000000).toFixed(1)}M`,
+            // value: `$${(totalAmount)}`,
+            value: `$6050000`,
+
             // change: `${data.grant_change > 0 ? '+' : ''}${data.grant_change}% from last year`
-            change: `+200% from last year`
+            change: `+400% from last year`
 
           }
         ]);

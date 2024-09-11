@@ -3,7 +3,16 @@ import { useSelector } from "react-redux";
 import { supabase } from "../utils/supabaseclient";
 import { useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faShare, faProjectDiagram, faBook, faCertificate, faHandHoldingUsd, faTrophy, faLink } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faShare,
+  faProjectDiagram,
+  faBook,
+  faCertificate,
+  faHandHoldingUsd,
+  faTrophy,
+  faLink,
+} from "@fortawesome/free-solid-svg-icons";
 
 const ProfilePage = () => {
   const { id } = useParams();
@@ -48,35 +57,43 @@ const ProfilePage = () => {
         const { data: projectsData } = await supabase
           .from("projects")
           .select("*")
-          .or(`done_by.eq.${userId}`|| `team_members.cs.{id: ${userId}}`);
+          .or(`done_by.eq.${userId}` || `team_members.cs.{id: ${userId}}`);
         setProjects(projectsData || []);
 
         // Fetch publications
         const { data: publicationsData } = await supabase
           .from("publications")
           .select("*")
-          .or(`authors.cs.{${user.name}}`|| `team_members.cs.{id: ${userId}}`);
+          .or(`authors.cs.{${user.name}}` || `team_members.cs.{id: ${userId}}`);
         setPublications(publicationsData || []);
 
         // Fetch patents
         const { data: patentsData } = await supabase
           .from("patents")
           .select("*")
-          .or(`inventors.cs.{${user.name}}`|| `team_members.cs.{id: ${userId}}`);
+          .or(
+            `inventors.cs.{${user.name}}` || `team_members.cs.{id: ${userId}}`
+          );
         setPatents(patentsData || []);
 
         // Fetch grants
         const { data: grantsData } = await supabase
           .from("grants")
           .select("*")
-          .or(`principal_investigator.eq.${userId}`|| `team_members.cs.{id: ${userId}}`);
+          .or(
+            `principal_investigator.eq.${userId}` ||
+              `team_members.cs.{id: ${userId}}`
+          );
         setGrants(grantsData || []);
 
         // Fetch competitions
         const { data: competitionsData } = await supabase
           .from("competitions")
           .select("*")
-          .or(`participants.cs.{${user.name}}`|| `team_members.cs.{id: ${userId}}`);
+          .or(
+            `participants.cs.{${user.name}}` ||
+              `team_members.cs.{id: ${userId}}`
+          );
         setCompetitions(competitionsData || []);
       }
     };
@@ -91,7 +108,12 @@ const ProfilePage = () => {
     });
   };
 
-  if (!user) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (!user)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
 
   return (
     <div className="bg-white text-black min-h-screen">
@@ -103,8 +125,7 @@ const ProfilePage = () => {
           </div>
           <button
             onClick={handleShare}
-            className="bg-black text-white px-4 py-2 rounded-full flex items-center hover:bg-gray-800 transition duration-300"
-          >
+            className="bg-black text-white px-4 py-2 rounded-full flex items-center hover:bg-gray-800 transition duration-300">
             <FontAwesomeIcon icon={faShare} className="mr-2" />
             Share Profile
           </button>
@@ -118,8 +139,14 @@ const ProfilePage = () => {
             renderItem={(project) => (
               <div className="mb-2">
                 <div className="w-full flex gap-3 items-center justify-start">
-                <h4 className="font-semibold text-2xl">{project.title} </h4>
-                <FontAwesomeIcon icon={faLink} className="text-black text-[.8rem] "/>
+                  <h4 className="font-semibold text-2xl">{project.title} </h4>
+
+                  <a href={project.link} target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon
+                      icon={faLink}
+                      className="text-black text-[.8rem]"
+                    />
+                  </a>
                 </div>
                 <p>{project.description}</p>
               </div>
@@ -133,6 +160,7 @@ const ProfilePage = () => {
             renderItem={(publication) => (
               <div className="mb-2">
                 <h4 className="font-semibold">{publication.title}</h4>
+                <FontAwesomeIcon icon={faLink} className="text-black text-[.8rem] " />
                 <p className="text-sm text-gray-600">{publication.journal}</p>
               </div>
             )}
@@ -145,6 +173,7 @@ const ProfilePage = () => {
             renderItem={(patent) => (
               <div className="mb-2">
                 <h4 className="font-semibold">{patent.title}</h4>
+                {/* <FontAwesomeIcon icon={faLink} className="text-black text-[.8rem] " onClick={navigate(`${patents.link}`)}/> */}
                 <p className="text-sm text-gray-600">{patent.status}</p>
               </div>
             )}
@@ -157,6 +186,7 @@ const ProfilePage = () => {
             renderItem={(grant) => (
               <div className="mb-2">
                 <h4 className="font-semibold">{grant.title}</h4>
+                {/* <FontAwesomeIcon icon={faLink} className="text-black text-[.8rem] " onClick={navigate(`${project.link}`)}/> */}
                 <p className="text-sm text-gray-600">{grant.granting_agency}</p>
               </div>
             )}
@@ -169,7 +199,9 @@ const ProfilePage = () => {
             renderItem={(competition) => (
               <div className="mb-2">
                 <h4 className="font-semibold">{competition.title}</h4>
-                <p className="text-sm text-gray-600">{competition.rank_achieved}</p>
+                <p className="text-sm text-gray-600">
+                  {competition.rank_achieved}
+                </p>
               </div>
             )}
           />
