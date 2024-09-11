@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseclient';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faThumbsDown, faLink } from '@fortawesome/free-solid-svg-icons';
 import Navbar from '../components/Navbar';
 
 const ReviewSubmissions = () => {
+  const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
   const [submissions, setSubmissions] = useState([]);
   const [submissionType, setSubmissionType] = useState('projects');
@@ -109,7 +110,11 @@ const ReviewSubmissions = () => {
         <tbody>
           {submissions.map((submission) => (
             <tr key={submission.id} className="border-b">
-              <td className="border p-2">{submission.title}</td>
+              <td className="border p-2">{submission.title}{" "}<FontAwesomeIcon 
+                icon={faLink} 
+                className="text-black text-[.8rem] cursor-pointer" 
+                onClick={() => navigate(submission.link)} 
+            /></td>
               <td className="border p-2">{submission.description}</td>
               <td className="border p-2">{submission.done_by}</td>
               <td className="border p-2">
