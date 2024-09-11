@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from '../utils/supabaseclient';
 import Card from "./Card";
-import PieChartComponent from "./PieChartComponent";
+import PieChartComponent from "./PiechartComponent";
 import useFetchProjectPercentage from "../hooks/useFetchProjectPercentage";
 import useFetchPublicationPercentage from "../hooks/useFetchPublicationPercentage";
 import useFetchPatentPercentage from "../hooks/useFetchPatentPercentage";
