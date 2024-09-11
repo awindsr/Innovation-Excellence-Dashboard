@@ -1,6 +1,6 @@
 # Innovation Excellence Dashboard
 
-![Innovation Excellence Dashboard](https://your-screenshot-url.com/dashboard-screenshot.png)
+![Innovation Excellence Dashboard](https://github.com/awindsr/SmartIndia/blob/main/public/Home.png?raw=true)
 
 ## Overview
 
