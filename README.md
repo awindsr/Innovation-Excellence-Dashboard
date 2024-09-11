@@ -71,8 +71,8 @@ src/
    - Copy your project's URL and anon key
    - Create a `.env` file in the root directory with the following content:
      ```
-     REACT_APP_SUPABASE_URL=your-project-url
-     REACT_APP_SUPABASE_ANON_KEY=your-anon-key
+     VITE_SUPABASE_URL=your-project-url
+     VITE_SUPABASE_ANON_KEY=your-anon-key
      ```
 
 4. **Start the development server:**
