@@ -57,7 +57,7 @@ src/
 
 1. **Clone the repository:**
    ```
-   git clone https://github.com/your-username/innovation-excellence-dashboard.git
+   git clone https://github.com/awindsr/innovation-excellence-dashboard.git
    cd innovation-excellence-dashboard
    ```
 
