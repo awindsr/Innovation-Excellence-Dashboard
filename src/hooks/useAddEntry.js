@@ -1,5 +1,7 @@
 //handle entries submitted by user.
 //on submission, notify faculty to approve/verify submission
+//default status to verification pending for all submissions
+//on approval change status to approved
 
   const handleSubmit = (e) => {
     e.preventDefault();
